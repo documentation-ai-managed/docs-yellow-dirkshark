@@ -1,0 +1,185 @@
+openapi: '3.0.0'
+info:
+  version: 1.0.0
+  title: Yellow DirkShark
+  license:
+    name: MIT
+servers:
+  - url: http://petstore.swagger.io/v1
+paths:
+  /builds:
+    get:
+      summary: List all builds
+      operationId: listBuilds
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: An paged array of builds
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Builds'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create build
+      operationId: createBuilds
+      responses:
+        201:
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /builds/{buildId}:
+    get:
+      summary: Get specific build
+      operationId: showBuildById
+      parameters:
+        - name: buildId
+          in: path
+          required: true
+          description: The id of the build to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Builds'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /comments:
+    get:
+      summary: List all comments
+      operationId: listComments
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: An paged array of comments
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comments'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create comment
+      operationId: createComments
+      responses:
+        201:
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /comments/{commentId}:
+    get:
+      summary: Get specific comment
+      operationId: showCommentById
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          description: The id of the comment to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comments'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Build:
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        designer:
+          type: string
+    Builds:
+      type: array
+      items:
+        $ref: '#/components/schemas/Build'
+    Comment:
+      required:
+        - id
+        - text
+      properties:
+        id:
+          type: integer
+          format: int64
+        text:
+          type: string
+        author:
+          type: string
+    Comments:
+      type: array
+      items:
+        $ref: '#/components/schemas/Comment'
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
